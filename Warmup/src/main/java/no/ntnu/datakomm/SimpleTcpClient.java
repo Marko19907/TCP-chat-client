@@ -99,7 +99,7 @@ public class SimpleTcpClient {
     /**
      * Put the main thread to sleep for a random number of seconds (between 2 and 5 seconds)
      */
-    private void sleepRandomTime()  {
+    private void sleepRandomTime() {
         long secondsToSleep = 2 + (long) (Math.random() * 5);
         log("Sleeping " + secondsToSleep + " seconds to allow simulate long client-server connection...");
         try {
@@ -140,8 +140,20 @@ public class SimpleTcpClient {
      * return true as well.
      */
     private boolean closeConnection() {
-        // TODO - implement this method
-        return false;
+        // Guard condition
+        if (!this.isConnected()) {
+            throw new IllegalStateException("Not connected to the server!");
+        }
+
+        boolean result = false;
+        try {
+            this.socket.close();
+            result = true;
+        } catch (IOException e) {
+            log("Could not close the connection with the server " + e.getMessage());
+        }
+
+        return result;
     }
 
 
@@ -157,7 +169,7 @@ public class SimpleTcpClient {
             System.out.println("Connection is missing");
             return false;
         }
-        if (request == null){
+        if (request == null) {
             log("The request cannot be null");
             return false;
         }
@@ -183,8 +195,7 @@ public class SimpleTcpClient {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             response = reader.readLine();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             log("Failed to read the response from the server, reason: " + e.getMessage());
         }
         return response;
@@ -192,6 +203,7 @@ public class SimpleTcpClient {
 
     /**
      * Returns true if the client is connected to the server.
+     *
      * @return True if the client is connected to the server
      */
     private boolean isConnected() {
