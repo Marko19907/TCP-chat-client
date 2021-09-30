@@ -11,7 +11,7 @@ import java.net.Socket;
  */
 public class SimpleTcpClient {
     // Remote host where the server will be running
-    private static final String HOST = "localhost";
+    private static final String HOST = "datakomm.work";
     // TCP port
     private static final int PORT = 1301;
     private Socket socket = null;
@@ -165,14 +165,15 @@ public class SimpleTcpClient {
      */
     private boolean sendRequestToServer(String request) {
         // Guard condition
-        if (this.socket == null || toServer == null) {
-            System.out.println("Connection is missing");
+        if (!this.isConnected()) {
+            log("Connection is missing");
             return false;
         }
         if (request == null) {
             log("The request cannot be null");
             return false;
         }
+
         toServer.println(request);
 
         return true;
