@@ -148,6 +148,8 @@ public class SimpleTcpClient {
         boolean result = false;
         try {
             this.socket.close();
+            this.socket = null;
+            this.toServer = null;
             result = true;
         } catch (IOException e) {
             log("Could not close the connection with the server " + e.getMessage());
