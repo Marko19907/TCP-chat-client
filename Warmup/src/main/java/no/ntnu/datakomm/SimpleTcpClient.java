@@ -1,6 +1,7 @@
 package no.ntnu.datakomm;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -12,6 +13,7 @@ public class SimpleTcpClient {
     // TCP port
     private static final int PORT = 1301;
     private Socket socket = null;
+    private PrintWriter toServer = null;
 
     /**
      * Run the TCP Client.
@@ -113,9 +115,15 @@ public class SimpleTcpClient {
      * @return True when connection established, false on error
      */
     private boolean connectToServer(String host, int port) {
+        if (host == null) {
+            throw new IllegalArgumentException("Host cannot be null!");
+        }
+
         boolean toReturn = false;
+
         try {
             this.socket = new Socket(host , port);
+            toServer = new PrintWriter(this.socket.getOutputStream(), true);
             toReturn = true;
         } catch (IOException e) {
             log("Failed to connect: " + e.getMessage());
@@ -142,9 +150,18 @@ public class SimpleTcpClient {
      * @return True when message successfully sent, false on error.
      */
     private boolean sendRequestToServer(String request) {
-        // TODO - implement this method
-        // Hint: you should check if the connection is open
-        return false;
+        // Guard condition
+        if (this.socket == null || toServer == null) {
+            System.out.println("Connection is missing");
+            return false;
+        }
+        if (request == null){
+            log("The request cannot be null");
+            return false;
+        }
+        toServer.println(request);
+
+        return true;
     }
 
     /**
