@@ -1,6 +1,8 @@
 package no.ntnu.datakomm;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -122,8 +124,8 @@ public class SimpleTcpClient {
         boolean toReturn = false;
 
         try {
-            this.socket = new Socket(host , port);
-            toServer = new PrintWriter(this.socket.getOutputStream(), true);
+            this.socket = new Socket(host, port);
+            this.toServer = new PrintWriter(this.socket.getOutputStream(), true);
             toReturn = true;
         } catch (IOException e) {
             log("Failed to connect: " + e.getMessage());
@@ -171,9 +173,29 @@ public class SimpleTcpClient {
      * (not included in the returned value).
      */
     private String readResponseFromServer() {
-        // TODO - implement this method
-        // Hint: you should check if the connection is open
-        return null;
+        // Guard condition
+        if (!this.isConnected()) {
+            log("Could not read the response, not connected to the server . . .");
+            return null;
+        }
+
+        String response = null;
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            response = reader.readLine();
+        }
+        catch (IOException e) {
+            log("Failed to read the response from the server, reason: " + e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * Returns true if the client is connected to the server.
+     * @return True if the client is connected to the server
+     */
+    private boolean isConnected() {
+        return !((this.socket == null) || (this.toServer == null));
     }
 
     /**
