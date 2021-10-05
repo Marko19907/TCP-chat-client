@@ -77,14 +77,17 @@ public class TCPClient {
     /**
      * Send a public message to all the recipients.
      *
-     * @param message Message to send
+     * @param message Message to send, not null
      * @return true if message sent, false on error
      */
     public boolean sendPublicMessage(String message) {
-        // TODO Step 2: implement this method
-        // Hint: Reuse sendCommand() method
-        // Hint: update lastError if you want to store the reason for the error.
-        return false;
+        // Guard condition
+        if (message == null) {
+            lastError = "Could not send the message";
+            return false;
+        }
+        // TODO: Can a String be blank, not empty?
+        return this.sendCommand("msg " + message);
     }
 
     /**
