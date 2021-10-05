@@ -209,6 +209,24 @@ public class TCPClient {
             // Hint: In Step 3 you need to handle only login-related responses.
             // Hint: In Step 3 reuse onLoginResult() method
 
+            String response = waitServerResponse();
+            if (response != null) {
+
+                final String serverCommand = response.split(" ")[0];
+                final String serverMessage = extractServerMessage(response);
+
+                switch (serverCommand) {
+                    case "loginok":
+                        onLoginResult(true, "");
+                        break;
+                    case "loginerr":
+                        onLoginResult(false, serverMessage);
+
+                    default:
+                        log("Unsupported command: " + serverMessage);
+                }
+            }
+
             // TODO Step 5: update this method, handle user-list response from the server
             // Hint: In Step 5 reuse onUserList() method
 
@@ -220,6 +238,22 @@ public class TCPClient {
             // TODO Step 8: add support for incoming supported command list (type: supported)
 
         }
+    }
+
+    /**
+     * Extracts the server message from the response
+     *
+     * @param response response to extract from
+     * @return the message in the response
+     */
+    private String extractServerMessage(String response) {
+        String[] splitString = response.split(" ");
+        int length = splitString.length;
+        StringBuilder builder = new StringBuilder();
+        for (int i = 1; i < length; i++){
+            builder.append(splitString[i]).append(" ");
+        }
+        return builder.toString();
     }
 
     /**
