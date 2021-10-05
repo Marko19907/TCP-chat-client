@@ -52,6 +52,9 @@ public class SimpleTcpClient {
         int b = (int) (1 + Math.random() * 10);
         String request = a + "+" + b;
 
+        sendRequestToServer("bruh");
+        sendRequestToServer("exit");
+
         if (!sendRequestToServer(request)) {
             log("ERROR: Failed to send valid message to server!");
             return;
