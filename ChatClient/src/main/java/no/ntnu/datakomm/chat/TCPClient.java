@@ -93,11 +93,15 @@ public class TCPClient {
     /**
      * Send a login request to the chat server.
      *
-     * @param username Username to use
+     * @param username Username to use, can't be blank or null
      */
     public void tryLogin(String username) {
-        // TODO Step 3: implement this method
-        // Hint: Reuse sendCommand() method
+        // Guard condition
+        if (username == null || username.isBlank()) {
+            lastError = "Username cant be blank!";
+            return;
+        }
+        sendCommand("login " + username);
     }
 
     /**
