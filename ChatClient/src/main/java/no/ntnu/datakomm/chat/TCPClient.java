@@ -23,8 +23,17 @@ public class TCPClient {
      * @return True on success, false otherwise
      */
     public boolean connect(String host, int port) {
+        boolean result = false;
+        try {
+            this.connection = new Socket(host, port);
+            this.toServer = new PrintWriter(this.connection.getOutputStream(), true);
+            this.fromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            result = true;
+        } catch (IOException e) {
+            log("Failed to connect: " + e.getMessage());
+        }
 
-        return false;
+        return result;
     }
 
     /**
