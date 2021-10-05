@@ -52,7 +52,7 @@ public class SimpleTcpClient {
         int b = (int) (1 + Math.random() * 10);
         String request = a + "+" + b;
 
-        sendRequestToServer("bruh");
+        sendRequestToServer("test");
         sendRequestToServer("exit");
 
         if (!sendRequestToServer(request)) {

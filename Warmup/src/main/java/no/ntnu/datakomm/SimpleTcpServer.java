@@ -29,7 +29,7 @@ public class SimpleTcpServer {
                     log("New client connected on thread: " + Thread.currentThread().getId());
 
                     try {
-                        while (!socket.isClosed()) {
+                        while (!client.isClosed()) {
                             BufferedReader clientInput = new BufferedReader(new InputStreamReader(client.getInputStream()));
                             String message = clientInput.readLine();
 
@@ -37,6 +37,7 @@ public class SimpleTcpServer {
 
                             if (message != null && message.equals("exit")) {
                                 client.close();
+                                log("Closed connection on thread: " + Thread.currentThread().getId());
                             }
                         }
                     } catch (IOException e) {
