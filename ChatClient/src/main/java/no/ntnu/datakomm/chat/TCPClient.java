@@ -144,11 +144,32 @@ public class TCPClient {
      * @return one line of text (one command) received from the server
      */
     private String waitServerResponse() {
-        // TODO Step 3: Implement this method
-        // TODO Step 4: If you get I/O Exception or null from the stream, it means that something has gone wrong
-        // with the stream and hence the socket. Probably a good idea to close the socket in that case.
+        String serverResponse = null;
 
-        return null;
+        //TODO Check if connection is established with the server
+
+        try {
+            serverResponse = this.fromServer.readLine();
+        } catch (IOException e) {
+            log("Could not receive message from server" + e.getMessage());
+            closeConnection();
+        }
+
+        return serverResponse;
+    }
+
+    /**
+     * Closes the connection to the server
+     */
+    private void closeConnection() {
+        try {
+            this.connection.close();
+            this.connection = null;
+            this.toServer = null;
+            this.fromServer = null;
+        } catch (IOException e) {
+            log("Couldn't close the connection: " + e.getMessage());
+        }
     }
 
     /**
