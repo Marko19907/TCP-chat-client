@@ -23,10 +23,17 @@ public class TCPClient {
      * @return True on success, false otherwise
      */
     public boolean connect(String host, int port) {
-        // TODO Step 1: implement this method
-        // Hint: Remember to process all exceptions and return false on error
-        // Hint: Remember to set up all the necessary input/output stream variables
-        return false;
+        boolean result = false;
+        try {
+            this.connection = new Socket(host, port);
+            this.toServer = new PrintWriter(this.connection.getOutputStream(), true);
+            this.fromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            result = true;
+        } catch (IOException e) {
+            log("Failed to connect: " + e.getMessage());
+        }
+
+        return result;
     }
 
     /**
@@ -57,9 +64,14 @@ public class TCPClient {
      * @return true on success, false otherwise
      */
     private boolean sendCommand(String cmd) {
-        // TODO Step 2: Implement this method
-        // Hint: Remember to check if connection is active
-        return false;
+        // Guard conditions
+        if (cmd == null || !isConnectionActive()) {
+            return false;
+        }
+
+        this.toServer.println(cmd);
+
+        return true;
     }
 
     /**
@@ -276,5 +288,13 @@ public class TCPClient {
      */
     private void onSupported(String[] commands) {
         // TODO Step 8: Implement this method
+    }
+
+    /**
+     * Prints message to the terminal
+     * @param message the message to print
+     */
+    private void log(String message) {
+        System.out.println(message);
     }
 }
