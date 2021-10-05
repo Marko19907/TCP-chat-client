@@ -23,9 +23,7 @@ public class TCPClient {
      * @return True on success, false otherwise
      */
     public boolean connect(String host, int port) {
-        // TODO Step 1: implement this method
-        // Hint: Remember to process all exceptions and return false on error
-        // Hint: Remember to set up all the necessary input/output stream variables
+
         return false;
     }
 
@@ -276,5 +274,13 @@ public class TCPClient {
      */
     private void onSupported(String[] commands) {
         // TODO Step 8: Implement this method
+    }
+
+    /**
+     * Prints message to the terminal
+     * @param message the message to print
+     */
+    private void log(String message) {
+        System.out.println(message);
     }
 }
