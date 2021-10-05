@@ -10,7 +10,7 @@ public class MultiClientTest {
      *
      * @param args Command-line arguments. Not used.
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         log("Starting several clients to test servers multi-threading capability");
         startNewClient();
         startNewClient();
@@ -23,21 +23,18 @@ public class MultiClientTest {
      */
     private static void startNewClient() {
         final SimpleTcpClient client = new SimpleTcpClient();
-        Runnable taskToBeExecutedOnAnotherThread = new Runnable() {
-            public void run() {
-                try {
-                    long threadId = Thread.currentThread().getId();
-                    log("Starting a client on thread #" + threadId);
-                    client.run();
-                    log("Done processing client on thread #" + threadId);
-                } catch (InterruptedException e) {
-                    log("Client 1 interrupted");
-                    Thread.currentThread().interrupt();
-                }
+        Thread thread = new Thread(() -> {
+            try {
+                long threadId = Thread.currentThread().getId();
+                log("Starting a client on thread #" + threadId);
+                client.run();
+                log("Done processing client on thread #" + threadId);
+            } catch (InterruptedException e) {
+                log("Client 1 interrupted");
+                Thread.currentThread().interrupt();
             }
-        };
-        Thread t = new Thread(taskToBeExecutedOnAnotherThread);
-        t.start();
+        });
+        thread.start();
     }
 
     /**
