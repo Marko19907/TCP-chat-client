@@ -64,9 +64,14 @@ public class TCPClient {
      * @return true on success, false otherwise
      */
     private boolean sendCommand(String cmd) {
-        // TODO Step 2: Implement this method
-        // Hint: Remember to check if connection is active
-        return false;
+        // Guard conditions
+        if (cmd == null || !isConnectionActive()) {
+            return false;
+        }
+
+        this.toServer.println(cmd);
+
+        return true;
     }
 
     /**
