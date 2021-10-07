@@ -306,9 +306,7 @@ public class TCPClient {
      * @param errMsg  Error message if any
      */
     private void onLoginResult(boolean success, String errMsg) {
-        for (ChatListener l : listeners) {
-            l.onLoginResult(success, errMsg);
-        }
+        this.listeners.forEach(l -> l.onLoginResult(success, errMsg));
     }
 
     /**
