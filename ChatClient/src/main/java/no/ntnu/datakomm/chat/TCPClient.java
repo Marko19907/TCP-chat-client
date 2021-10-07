@@ -197,6 +197,20 @@ public class TCPClient {
     }
 
     /**
+     * Placeholder function for lambda switch case
+     */
+    private void ignore() {}
+
+    /**
+     * Check if the message type is private
+     * @param messageCommand command from the server response
+     * @return true if private, else otherwise
+     */
+    private boolean isMessagePrivate(String messageCommand) {
+        return messageCommand.equals("msg");
+    }
+
+    /**
      * Read incoming messages one by one, generate events for the listeners. A loop that runs until
      * the connection is closed.
      */
@@ -216,14 +230,16 @@ public class TCPClient {
                 final String serverMessage = extractServerMessage(response);
 
                 switch (serverCommand) {
-                    case "loginok":
-                        onLoginResult(true, "");
-                        break;
-                    case "loginerr":
-                        onLoginResult(false, serverMessage);
+                    case "loginok" -> onLoginResult(true, "");
+                    case "loginerr" -> onLoginResult(false, serverMessage);
+                    case "modeok" -> ignore();
+                    case "msgok" -> ignore();
+                    case "msgerr" -> ignore();
+                    case "inbox" -> ignore();
+                    case "supported" -> ignore();
+                    case "cmderr" -> ignore();
 
-                    default:
-                        log("Unsupported command: " + serverMessage);
+                    default -> log("Unsupported command: " + serverMessage);
                 }
             }
 
