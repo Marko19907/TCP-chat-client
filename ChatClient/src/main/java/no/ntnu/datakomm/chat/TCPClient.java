@@ -126,10 +126,11 @@ public class TCPClient {
      * @return true if message sent, false on error
      */
     public boolean sendPrivateMessage(String recipient, String message) {
-        // TODO Step 6: Implement this method
-        // Hint: Reuse sendCommand() method
-        // Hint: update lastError if you want to store the reason for the error.
-        return false;
+        if (recipient == null || message == null){
+            log("Message cant be null");
+            return false;
+        }
+        return this.sendCommand("privmsg " + recipient + " " + message);
     }
 
 
@@ -342,6 +343,8 @@ public class TCPClient {
     private void onUsersList(String[] users) {
         this.listeners.forEach(l -> l.onUserList(users));
     }
+
+
 
     /**
      * Notify listeners that a message is received from the server

@@ -298,7 +298,7 @@ public class GUIController implements ChatListener {
                     // not be handled here! Here we only ask for update and go to sleep. Then repeat.
                     tcpClient.refreshUserList();
                     try {
-                        sleep(3000);
+                        Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
