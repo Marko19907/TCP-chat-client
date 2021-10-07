@@ -146,15 +146,19 @@ public class TCPClient {
      * @return one line of text (one command) received from the server
      */
     private String waitServerResponse() {
-        String serverResponse = null;
+        // Guard condition
+        if (!this.isConnectionActive()) {
+            log("No server connection");
+            return null;
+        }
 
-        //TODO Check if connection is established with the server
+        String serverResponse = null;
 
         try {
             serverResponse = this.fromServer.readLine();
         } catch (IOException e) {
             log("Could not receive message from server" + e.getMessage());
-            closeConnection();
+            this.onDisconnect();
         }
 
         return serverResponse;
