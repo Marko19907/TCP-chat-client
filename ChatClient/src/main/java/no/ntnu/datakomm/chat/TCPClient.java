@@ -46,8 +46,10 @@ public class TCPClient {
      * that no two threads call this method in parallel.
      */
     public synchronized void disconnect() {
-        // TODO Step 4: implement this method
-        // Hint: remember to check if connection is active
+        if (this.isConnectionActive()) {
+            this.closeConnection();
+            this.onDisconnect();
+        }
     }
 
     /**
@@ -238,7 +240,6 @@ public class TCPClient {
                     case "inbox" -> ignore();
                     case "supported" -> ignore();
                     case "cmderr" -> ignore();
-
                     default -> log("Unsupported command: " + serverMessage);
                 }
             }
@@ -314,8 +315,7 @@ public class TCPClient {
      * Internet error)
      */
     private void onDisconnect() {
-        // TODO Step 4: Implement this method
-        // Hint: all the onXXX() methods will be similar to onLoginResult()
+        this.listeners.forEach(ChatListener::onDisconnect);
     }
 
     /**
