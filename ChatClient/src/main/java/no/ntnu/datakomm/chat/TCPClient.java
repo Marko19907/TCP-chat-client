@@ -114,6 +114,8 @@ public class TCPClient {
         // TODO Step 5: implement this method
         // Hint: Use Wireshark and the provided chat client reference app to find out what commands the
         // client and server exchange for user listing.
+        this.sendCommand("users");
+
     }
 
     /**
@@ -236,14 +238,15 @@ public class TCPClient {
                 final String serverMessage = extractServerMessage(response);
 
                 switch (serverCommand) {
-                    case "loginok" -> onLoginResult(true, "");
-                    case "loginerr" -> onLoginResult(false, serverMessage);
+                    case "loginok" -> this.onLoginResult(true, "");
+                    case "loginerr" -> this.onLoginResult(false, serverMessage);
                     case "modeok" -> ignore();
                     case "msgok" -> ignore();
                     case "msgerr" -> ignore();
                     case "inbox" -> ignore();
                     case "supported" -> ignore();
                     case "cmderr" -> ignore();
+                    case "users" -> this.onUsersList(this.extractUsers(serverMessage));
                     default -> log("Unsupported command: " + serverMessage);
                 }
             }
@@ -259,6 +262,15 @@ public class TCPClient {
             // TODO Step 8: add support for incoming supported command list (type: supported)
 
         }
+    }
+
+    /**
+     * Extracts the users String array from a given users String
+     * @param serverMessage The String to extract users from
+     * @return The extracted users String array
+     */
+    private String[] extractUsers(String serverMessage) {
+        return serverMessage.split(" ");
     }
 
     /**
@@ -328,7 +340,7 @@ public class TCPClient {
      * @param users List with usernames
      */
     private void onUsersList(String[] users) {
-        // TODO Step 5: Implement this method
+        this.listeners.forEach(l -> l.onUserList(users));
     }
 
     /**
