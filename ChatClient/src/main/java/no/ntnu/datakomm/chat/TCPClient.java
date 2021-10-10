@@ -1,7 +1,10 @@
 package no.ntnu.datakomm.chat;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,10 +30,10 @@ public class TCPClient {
         try {
             this.connection = new Socket(host, port);
             this.toServer = new PrintWriter(this.connection.getOutputStream(), true);
-            this.fromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            this.fromServer = new BufferedReader(new InputStreamReader(this.connection.getInputStream()));
             result = true;
         } catch (IOException e) {
-            log("Failed to connect: " + e.getMessage());
+            this.log("Failed to connect: " + e.getMessage());
         }
 
         return result;
@@ -56,7 +59,7 @@ public class TCPClient {
      * @return true if the connection is active (opened), false if not.
      */
     public boolean isConnectionActive() {
-        return connection != null;
+        return this.connection != null;
     }
 
     /**
@@ -67,7 +70,7 @@ public class TCPClient {
      */
     private boolean sendCommand(String cmd) {
         // Guard conditions
-        if (cmd == null || !isConnectionActive()) {
+        if (cmd == null || !this.isConnectionActive()) {
             return false;
         }
 
@@ -85,7 +88,7 @@ public class TCPClient {
     public boolean sendPublicMessage(String message) {
         // Guard condition
         if (message == null) {
-            lastError = "Could not send the message";
+            this.lastError = "Could not send the message";
             return false;
         }
         // TODO: Can a String be blank, not empty?
@@ -100,10 +103,10 @@ public class TCPClient {
     public void tryLogin(String username) {
         // Guard condition
         if (username == null || username.isBlank()) {
-            lastError = "Username cant be blank!";
+            this.lastError = "Username cant be blank!";
             return;
         }
-        sendCommand("login " + username);
+        this.sendCommand("login " + username);
     }
 
     /**
@@ -115,7 +118,6 @@ public class TCPClient {
         // Hint: Use Wireshark and the provided chat client reference app to find out what commands the
         // client and server exchange for user listing.
         this.sendCommand("users");
-
     }
 
     /**
@@ -127,7 +129,7 @@ public class TCPClient {
      */
     public boolean sendPrivateMessage(String recipient, String message) {
         if (recipient == null || message == null){
-            log("Message cant be null");
+            this.log("Message can't be null");
             return false;
         }
         return this.sendCommand("privmsg " + recipient + " " + message);
@@ -151,7 +153,7 @@ public class TCPClient {
     private String waitServerResponse() {
         // Guard condition
         if (!this.isConnectionActive()) {
-            log("No server connection");
+            this.log("No server connection");
             return null;
         }
 
@@ -160,7 +162,7 @@ public class TCPClient {
         try {
             serverResponse = this.fromServer.readLine();
         } catch (IOException e) {
-            log("Could not receive message from server" + e.getMessage());
+            this.log("Could not receive message from server" + e.getMessage());
             this.onDisconnect();
         }
 
@@ -177,7 +179,7 @@ public class TCPClient {
             this.toServer = null;
             this.fromServer = null;
         } catch (IOException e) {
-            log("Couldn't close the connection: " + e.getMessage());
+            this.log("Couldn't close the connection: " + e.getMessage());
         }
     }
 
@@ -187,8 +189,8 @@ public class TCPClient {
      * @return Error message or "" if there has been no error
      */
     public String getLastError() {
-        if (lastError != null) {
-            return lastError;
+        if (this.lastError != null) {
+            return this.lastError;
         } else {
             return "";
         }
@@ -200,7 +202,7 @@ public class TCPClient {
     public void startListenThread() {
         // Call parseIncomingCommands() in the new thread.
         Thread t = new Thread(() -> {
-            parseIncomingCommands();
+            this.parseIncomingCommands();
         });
         t.start();
     }
@@ -208,7 +210,8 @@ public class TCPClient {
     /**
      * Placeholder function for lambda switch case
      */
-    private void ignore() {}
+    private void ignore() {
+    }
 
     /**
      * Check if the message type is private
@@ -224,7 +227,7 @@ public class TCPClient {
      * the connection is closed.
      */
     private void parseIncomingCommands() {
-        while (isConnectionActive()) {
+        while (this.isConnectionActive()) {
             // TODO Step 3: Implement this method
             // Hint: Reuse waitServerResponse() method
             // Hint: Have a switch-case (or other way) to check what type of response is received from the server
@@ -232,23 +235,23 @@ public class TCPClient {
             // Hint: In Step 3 you need to handle only login-related responses.
             // Hint: In Step 3 reuse onLoginResult() method
 
-            String response = waitServerResponse();
+            String response = this.waitServerResponse();
             if (response != null) {
 
                 final String serverCommand = response.split(" ")[0];
-                final String serverMessage = extractServerMessage(response);
+                final String serverMessage = this.extractServerMessage(response);
 
                 switch (serverCommand) {
                     case "loginok" -> this.onLoginResult(true, "");
                     case "loginerr" -> this.onLoginResult(false, serverMessage);
-                    case "modeok" -> ignore();
-                    case "msgok" -> ignore();
-                    case "msgerr" -> ignore();
-                    case "inbox" -> ignore();
-                    case "supported" -> ignore();
-                    case "cmderr" -> ignore();
+                    case "modeok" -> this.ignore();
+                    case "msgok" -> this.ignore();
+                    case "msgerr" -> this.ignore();
+                    case "inbox" -> this.ignore();
+                    case "supported" -> this.ignore();
+                    case "cmderr" -> this.ignore();
                     case "users" -> this.onUsersList(this.extractUsers(serverMessage));
-                    default -> log("Unsupported command: " + serverMessage);
+                    default -> this.log("Unsupported command: " + serverMessage);
                 }
             }
 
@@ -296,8 +299,8 @@ public class TCPClient {
      * @param listener
      */
     public void addListener(ChatListener listener) {
-        if (!listeners.contains(listener)) {
-            listeners.add(listener);
+        if (!this.listeners.contains(listener)) {
+            this.listeners.add(listener);
         }
     }
 
@@ -307,7 +310,7 @@ public class TCPClient {
      * @param listener
      */
     public void removeListener(ChatListener listener) {
-        listeners.remove(listener);
+        this.listeners.remove(listener);
     }
 
 
@@ -343,8 +346,6 @@ public class TCPClient {
     private void onUsersList(String[] users) {
         this.listeners.forEach(l -> l.onUserList(users));
     }
-
-
 
     /**
      * Notify listeners that a message is received from the server

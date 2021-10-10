@@ -23,20 +23,20 @@ public class TextMessage {
     }
 
     public String getSender() {
-        return sender;
+        return this.sender;
     }
 
     public boolean isPrivate() {
-        return priv;
+        return this.priv;
     }
 
     public String getText() {
-        return text;
+        return this.text;
     }
 
     @Override
     public String toString() {
-        return (priv ? "PRIVATE " : "") + " from " + sender + ": " + text;
+        return (this.priv ? "PRIVATE " : "") + " from " + this.sender + ": " + this.text;
     }
 
     @Override
