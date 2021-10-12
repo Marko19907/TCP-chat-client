@@ -369,7 +369,8 @@ public class TCPClient {
      * @param text   Message text
      */
     private void onMsgReceived(boolean priv, String sender, String text) {
-        // TODO Step 7: Implement this method
+        final TextMessage message = new TextMessage(sender, priv, text);
+        this.listeners.forEach(listener -> listener.onMessageReceived(message));
     }
 
     /**
