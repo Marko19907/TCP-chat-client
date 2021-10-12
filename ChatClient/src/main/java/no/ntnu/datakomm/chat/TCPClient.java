@@ -75,7 +75,6 @@ public class TCPClient {
         }
 
         this.toServer.println(cmd);
-        System.out.println("Sent command: " + cmd);
         return true;
     }
 
@@ -91,6 +90,7 @@ public class TCPClient {
             this.lastError = "Could not send the message";
             return false;
         }
+        // TODO: Can a String be blank, not empty?
         return this.sendCommand("msg " + message);
     }
 
