@@ -255,7 +255,7 @@ public class TCPClient {
                     case "msgerr" -> this.onMsgError(serverMessage);
                     case "inbox" -> this.ignore();
                     case "supported" -> this.ignore();
-                    case "cmderr" -> this.ignore();
+                    case "cmderr" -> this.onCmdError(serverMessage);
                     case "users" -> this.onUsersList(this.extractUsers(serverMessage));
                     default -> this.log("Unsupported command: " + serverMessage);
                 }
@@ -388,8 +388,8 @@ public class TCPClient {
      *
      * @param errMsg Error message
      */
-    private void onCmdError(String errMsg) {
-        // TODO Step 7: Implement this method
+    private void onCmdError(final String errMsg) {
+        this.listeners.forEach(listener -> listener.onCommandError(errMsg));
     }
 
     /**
