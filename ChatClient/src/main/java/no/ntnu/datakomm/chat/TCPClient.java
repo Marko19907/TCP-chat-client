@@ -219,7 +219,7 @@ public class TCPClient {
      * @return true if private, else otherwise
      */
     private boolean isMessagePrivate(String messageCommand) {
-        return messageCommand.equals("msg");
+        return messageCommand.equals("privmsg");
     }
 
     /**
@@ -238,14 +238,16 @@ public class TCPClient {
             String response = this.waitServerResponse();
             if (response != null) {
 
-                final String serverCommand = response.split(" ")[0];
-                final String serverMessage = this.extractServerMessage(response);
+                final String serverCommand = this.extractFirstWord(response);
+                final String serverMessage = this.excludeFirstWord(response);
 
                 switch (serverCommand) {
                     case "loginok" -> this.onLoginResult(true, "");
                     case "loginerr" -> this.onLoginResult(false, serverMessage);
                     case "modeok" -> this.ignore();
-                    case "msgok" -> this.ignore();
+                    case "msg" -> this.onMsgReceived(false,
+                            this.extractFirstWord(serverMessage),
+                            this.excludeFirstWord(serverMessage));
                     case "msgerr" -> this.ignore();
                     case "inbox" -> this.ignore();
                     case "supported" -> this.ignore();
@@ -269,6 +271,15 @@ public class TCPClient {
     }
 
     /**
+     * Extracts the first word of a String
+     * @param text The String to extract the first words from
+     * @return The first word
+     */
+    private String extractFirstWord(String text) {
+        return text.split(" ")[0];
+    }
+
+    /**
      * Extracts the users String array from a given users String
      * @param serverMessage The String to extract users from
      * @return The extracted users String array
@@ -283,7 +294,7 @@ public class TCPClient {
      * @param response response to extract from
      * @return the message in the response
      */
-    private String extractServerMessage(String response) {
+    private String excludeFirstWord(String response) {
         String[] splitString = response.split(" ");
         int length = splitString.length;
         StringBuilder builder = new StringBuilder();
