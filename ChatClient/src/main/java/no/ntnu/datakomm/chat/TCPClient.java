@@ -218,19 +218,17 @@ public class TCPClient {
                 switch (serverCommand) {
                     case "loginok" -> this.onLoginResult(true, "");
                     case "loginerr" -> this.onLoginResult(false, serverMessage);
-                    case "modeok" -> this.ignore();
                     case "msg" -> this.onMsgReceived(false,
                             this.extractFirstWord(serverMessage),
                             this.excludeFirstWord(serverMessage));
                     case "privmsg" -> this.onMsgReceived(true,
                             this.extractFirstWord(serverMessage),
                             this.excludeFirstWord(serverMessage));
-                    case "msgok" -> this.ignore();
                     case "msgerr" -> this.onMsgError(serverMessage);
-                    case "inbox" -> this.ignore();
                     case "cmderr" -> this.onCmdError(serverMessage);
                     case "users" -> this.onUsersList(this.extractUsers(serverMessage));
                     case "supported" -> this.onSupported(serverMessage.split(" "));
+                    case "modeok", "msgok", "inbox" -> this.ignore();
                     default -> this.log("Unsupported command: " + serverMessage);
                 }
             }
