@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class TCPClient {
     private PrintWriter toServer;
@@ -112,9 +113,6 @@ public class TCPClient {
      * clear your current user list and use events in the listener.
      */
     public void refreshUserList() {
-        // TODO Step 5: implement this method
-        // Hint: Use Wireshark and the provided chat client reference app to find out what commands the
-        // client and server exchange for user listing.
         this.sendCommand("users");
     }
 
@@ -138,8 +136,6 @@ public class TCPClient {
      * Send a request for the list of commands that server supports.
      */
     public void askSupportedCommands() {
-        // TODO Step 8: Implement this method
-        // Hint: Reuse sendCommand() method
         this.sendCommand("help");
     }
 
@@ -188,11 +184,7 @@ public class TCPClient {
      * @return Error message or "" if there has been no error
      */
     public String getLastError() {
-        if (this.lastError != null) {
-            return this.lastError;
-        } else {
-            return "";
-        }
+        return Objects.requireNonNullElse(this.lastError, "");
     }
 
     /**
@@ -200,9 +192,7 @@ public class TCPClient {
      */
     public void startListenThread() {
         // Call parseIncomingCommands() in the new thread.
-        Thread t = new Thread(() -> {
-            this.parseIncomingCommands();
-        });
+        Thread t = new Thread(this::parseIncomingCommands);
         t.start();
     }
 
@@ -213,26 +203,11 @@ public class TCPClient {
     }
 
     /**
-     * Check if the message type is private
-     * @param messageCommand command from the server response
-     * @return true if private, else otherwise
-     */
-    private boolean isMessagePrivate(String messageCommand) {
-        return messageCommand.equals("privmsg");
-    }
-
-    /**
      * Read incoming messages one by one, generate events for the listeners. A loop that runs until
      * the connection is closed.
      */
     private void parseIncomingCommands() {
         while (this.isConnectionActive()) {
-            // TODO Step 3: Implement this method
-            // Hint: Reuse waitServerResponse() method
-            // Hint: Have a switch-case (or other way) to check what type of response is received from the server
-            // and act on it.
-            // Hint: In Step 3 you need to handle only login-related responses.
-            // Hint: In Step 3 reuse onLoginResult() method
 
             String response = this.waitServerResponse();
             if (response != null) {
@@ -259,17 +234,6 @@ public class TCPClient {
                     default -> this.log("Unsupported command: " + serverMessage);
                 }
             }
-
-            // TODO Step 5: update this method, handle user-list response from the server
-            // Hint: In Step 5 reuse onUserList() method
-
-            // TODO Step 7: add support for incoming chat messages from other users (types: msg, privmsg)
-            // TODO Step 7: add support for incoming message errors (type: msgerr)
-            // TODO Step 7: add support for incoming command errors (type: cmderr)
-            // Hint for Step 7: call corresponding onXXX() methods which will notify all the listeners
-
-            // TODO Step 8: add support for incoming supported command list (type: supported)
-
         }
     }
 
