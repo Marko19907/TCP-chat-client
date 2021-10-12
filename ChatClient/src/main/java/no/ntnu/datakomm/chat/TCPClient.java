@@ -248,6 +248,9 @@ public class TCPClient {
                     case "msg" -> this.onMsgReceived(false,
                             this.extractFirstWord(serverMessage),
                             this.excludeFirstWord(serverMessage));
+                    case "privmsg" -> this.onMsgReceived(true,
+                            this.extractFirstWord(serverMessage),
+                            this.excludeFirstWord(serverMessage));
                     case "msgerr" -> this.ignore();
                     case "inbox" -> this.ignore();
                     case "supported" -> this.ignore();
