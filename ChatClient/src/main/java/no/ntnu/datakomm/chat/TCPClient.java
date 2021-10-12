@@ -251,7 +251,8 @@ public class TCPClient {
                     case "privmsg" -> this.onMsgReceived(true,
                             this.extractFirstWord(serverMessage),
                             this.excludeFirstWord(serverMessage));
-                    case "msgerr" -> this.ignore();
+                    case "msgok" -> this.ignore();
+                    case "msgerr" -> this.onMsgError(serverMessage);
                     case "inbox" -> this.ignore();
                     case "supported" -> this.ignore();
                     case "cmderr" -> this.ignore();
@@ -378,8 +379,8 @@ public class TCPClient {
      *
      * @param errMsg Error description returned by the server
      */
-    private void onMsgError(String errMsg) {
-        // TODO Step 7: Implement this method
+    private void onMsgError(final String errMsg) {
+        this.listeners.forEach(listener -> listener.onMessageError(errMsg));
     }
 
     /**
