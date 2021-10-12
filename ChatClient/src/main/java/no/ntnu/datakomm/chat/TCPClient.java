@@ -142,6 +142,7 @@ public class TCPClient {
     public void askSupportedCommands() {
         // TODO Step 8: Implement this method
         // Hint: Reuse sendCommand() method
+        this.sendCommand("help");
     }
 
 
@@ -254,9 +255,9 @@ public class TCPClient {
                     case "msgok" -> this.ignore();
                     case "msgerr" -> this.onMsgError(serverMessage);
                     case "inbox" -> this.ignore();
-                    case "supported" -> this.ignore();
                     case "cmderr" -> this.onCmdError(serverMessage);
                     case "users" -> this.onUsersList(this.extractUsers(serverMessage));
+                    case "supported" -> this.onSupported(serverMessage.split(" "));
                     default -> this.log("Unsupported command: " + serverMessage);
                 }
             }
@@ -399,7 +400,7 @@ public class TCPClient {
      * @param commands Commands supported by the server
      */
     private void onSupported(String[] commands) {
-        // TODO Step 8: Implement this method
+        this.listeners.forEach(listener -> listener.onSupportedCommands(commands));
     }
 
     /**
