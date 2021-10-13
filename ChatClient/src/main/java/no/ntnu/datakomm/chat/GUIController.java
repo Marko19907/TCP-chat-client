@@ -128,6 +128,14 @@ public class GUIController implements ChatListener {
     }
 
     /**
+     * Responds to the login action
+     */
+    private void loginAction() {
+        this.tcpClient.tryLogin(this.loginInput.getText());
+        this.loginInput.setText("");
+    }
+
+    /**
      * Take the message from the text input box, send it to the server
      */
     private void inputSubmit() {
