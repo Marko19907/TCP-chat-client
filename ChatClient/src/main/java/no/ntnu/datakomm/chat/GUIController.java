@@ -140,7 +140,11 @@ public class GUIController implements ChatListener {
      */
     private void inputSubmit() {
         String msgToSend = this.textInput.getText();
-        if (!msgToSend.isEmpty()) {
+        // Solves the end line issue for single line messages
+        if (msgToSend.endsWith("\n")) {
+            msgToSend = msgToSend.substring(0, msgToSend.length() - 1);
+        }
+        if (!msgToSend.isBlank()) {
             TextMessage msg;
             if (this.tcpClient.isConnectionActive()) {
                 // Split the message in max 3 parts. If the first one is "/privmsg", then recipient is the second
