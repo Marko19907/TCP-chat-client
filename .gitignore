@@ -25,3 +25,5 @@ hs_err_pid*
 *.iml
 
 ChatClient/target
+Warmup/target/
+Server/target/
