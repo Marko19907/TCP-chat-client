@@ -1,12 +1,14 @@
 package no.ntnu.datakomm.chat;
 
-import no.ntnu.datakomm.chat.helpers.DummyResponseCounter;
 import no.ntnu.datakomm.chat.helpers.DummyMsgReceiver;
+import no.ntnu.datakomm.chat.helpers.DummyResponseCounter;
 import no.ntnu.datakomm.chat.helpers.DummySupportedReceiver;
 import no.ntnu.datakomm.chat.helpers.DummyUserListingReceiver;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TcpClientTest {
     // Host and port to be used for all connection in the tests
