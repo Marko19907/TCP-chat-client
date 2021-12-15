@@ -42,7 +42,7 @@ public class SimpleTcpClient {
     public void run() throws InterruptedException {
         log("Simple TCP client started");
 
-        if (!connectToServer(HOST, PORT)) {
+        if (!this.connectToServer(HOST, PORT)) {
             log("ERROR: Failed to connect to the server");
             return;
         }
@@ -52,45 +52,45 @@ public class SimpleTcpClient {
         int b = (int) (1 + Math.random() * 10);
         String request = a + "+" + b;
 
-        sendRequestToServer("test");
-        sendRequestToServer("exit");
+        this.sendRequestToServer("test");
+        this.sendRequestToServer("exit");
 
-        if (!sendRequestToServer(request)) {
+        if (!this.sendRequestToServer(request)) {
             log("ERROR: Failed to send valid message to server!");
             return;
         }
         log("Sent " + request + " to server");
 
-        String response = readResponseFromServer();
+        String response = this.readResponseFromServer();
         if (response == null) {
             log("ERROR: Failed to receive server's response!");
             return;
         }
         log("Server responded with: " + response);
 
-        sleepRandomTime();
+        this.sleepRandomTime();
         request = "bla+bla";
-        if (!sendRequestToServer(request)) {
+        if (!this.sendRequestToServer(request)) {
             log("ERROR: Failed to send invalid message to server!");
             return;
         }
         log("Sent " + request + " to server");
 
-        response = readResponseFromServer();
+        response = this.readResponseFromServer();
         if (response == null) {
             log("ERROR: Failed to receive server's response!");
             return;
         }
         log("Server responded with: " + response);
 
-        if (!sendRequestToServer("game over") || !closeConnection()) {
+        if (!this.sendRequestToServer("game over") || !this.closeConnection()) {
             log("ERROR: Failed to stop conversation");
             return;
         }
         log("Game over, connection closed");
 
         // When the connection is closed, try to send one more message. It should fail.
-        if (!sendRequestToServer("2+2")) {
+        if (!this.sendRequestToServer("2+2")) {
             log("Sending another message after closing the connection failed as expected");
         } else {
             log("ERROR: sending a message after closing the connection did not fail!");
@@ -179,7 +179,7 @@ public class SimpleTcpClient {
             return false;
         }
 
-        toServer.println(request);
+        this.toServer.println(request);
 
         return true;
     }
@@ -199,7 +199,7 @@ public class SimpleTcpClient {
 
         String response = null;
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
             response = reader.readLine();
         } catch (IOException e) {
             log("Failed to read the response from the server, reason: " + e.getMessage());
