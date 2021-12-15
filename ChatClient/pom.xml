@@ -54,9 +54,24 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.6</version>
                 <configuration>
+                    <stripDebug>true</stripDebug>
+                    <compress>2</compress>
+                    <noHeaderFiles>true</noHeaderFiles>
+                    <noManPages>true</noManPages>
+                    <launcher>TCP chat client - launcher</launcher>
+                    <jlinkImageName>TCP-Chat-Client</jlinkImageName>
+                    <jlinkZipName>TCP chat client - zip</jlinkZipName>
                     <mainClass>${fullMainClass}</mainClass>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <!-- Apache Maven Compiler Plugin -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
