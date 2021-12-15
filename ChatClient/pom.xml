@@ -30,10 +30,18 @@
             <version>${javafx.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <!-- JUnit -->
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <!-- Emoji support -->
+            <groupId>com.kcthota</groupId>
+            <artifactId>emoji4j</artifactId>
+            <version>6.0</version>
         </dependency>
     </dependencies>
 

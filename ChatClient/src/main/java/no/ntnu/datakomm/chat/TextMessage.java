@@ -41,7 +41,15 @@ public class TextMessage {
 
     @Override
     public boolean equals(Object o) {
-        return o != null && o.hashCode() == this.hashCode();
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof final TextMessage message)) {
+            return false;
+        }
+        return this.priv == message.priv
+                && this.getSender().contains(message.getSender())
+                && this.getText().contains(message.getText());
     }
 
     @Override
